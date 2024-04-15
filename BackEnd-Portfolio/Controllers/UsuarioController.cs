@@ -40,7 +40,7 @@ namespace BackEnd_Portfolio.Controllers
         {
             try
             {
-                //await new UsuarioApplication().Excluir(usuario);
+                await new UsuarioApplication(_cache).Excluir(usuario.Name);
                 return Ok(usuario);
             }
 
@@ -55,8 +55,8 @@ namespace BackEnd_Portfolio.Controllers
         {
             try
             {
-                //await new UsuarioApplication().Editar(usuario);
-                return Ok(usuario);
+                await new UsuarioApplication(_cache).Editar(usuario);
+                return Ok();
             }
 
             catch (Exception ex)

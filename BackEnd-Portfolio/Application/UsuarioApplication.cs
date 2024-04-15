@@ -47,14 +47,39 @@ namespace BackEnd_Portfolio.Application
             }
         }
 
-        public async void Excluir(string chave)
+        public async Task<IActionResult>  Excluir(string nomeUsuario)
         {
-            await _cache.RemoveAsync(chave);
+            var lista = await Buscar();
+            var usuarioSalvo = lista.Where(a => a.Name == nomeUsuario).FirstOrDefault();
+
+            if (usuarioSalvo != null)
+            {
+                lista.Remove(usuarioSalvo);
+ 
+                await _cache.SetAsync("ListaUsuario", JsonConvert.SerializeObject(lista, Formatting.Indented));
+            };
+  
+            return null;
         }
 
-        public void Editar(UsuarioDTO usuarioDTO)
+        public async Task<IActionResult> Editar(UsuarioDTO usuarioDTO)
         {
+            var lista = await Buscar();
+            var usuarioSalvo = lista.Where(a => a.Name == usuarioDTO.Name).FirstOrDefault();
 
+            if (usuarioSalvo != null )
+            {
+                lista.Remove(usuarioSalvo);
+                lista.Add(usuarioDTO);
+                await _cache.SetAsync("ListaUsuario", JsonConvert.SerializeObject(lista, Formatting.Indented));
+            }
+            else
+            {
+                lista.Add(usuarioDTO);
+                await _cache.SetAsync("ListaUsuario", JsonConvert.SerializeObject(lista, Formatting.Indented));
+            }
+
+            return null;
         }
 
         public async Task<List<UsuarioDTO>> Buscar()
